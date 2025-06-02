@@ -1,6 +1,8 @@
+use clap::Parser;
 use dotenvy::dotenv;
 use pms::{
-    db::{doctor::get_all_doctors, get_db_pool},
+    cli::{Cli, Commands},
+    db::{self, get_db_pool},
     errors::AppError,
 };
 
@@ -8,9 +10,32 @@ use pms::{
 async fn main() -> Result<(), AppError> {
     dotenv().ok();
     let pool = get_db_pool().await?;
+    let cli = Cli::parse();
 
-    let doctors = get_all_doctors(&pool).await?;
-    println!("Doctors: {:?}", doctors);
+    match &cli.command {
+        Commands::RebuildDb => {
+            db::run_sql_scripts(&pool).await?;
+        }
+        Commands::ListDoctors(args) => {
+            let doctors = db::list_doctors(&pool, &args.name, &args.license_number).await?;
+            for doctor in doctors {
+                println!("{}", doctor);
+            }
+        }
+        Commands::AddDoctor(args) => {
+            db::add_doctor(args, &pool).await?;
+        }
+        Commands::ListPatients(args) => {
+            let patients = db::list_patients(&pool, &args.name, &args.patient_number).await?;
+            for patient in patients {
+                println!("{}", patient);
+            }
+        }
+        Commands::AddPatient(args) => {
+            db::add_patient(args, &pool).await?;
+        }
+    }
+
     Ok(())
 }
 

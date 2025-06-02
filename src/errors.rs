@@ -8,6 +8,15 @@ pub enum AppError {
     #[error("Database error: {0}")]
     DatabaseError(#[from] sqlx::Error),
 
+    #[error("Dialoguer error: {0}")]
+    DialoguerError(#[from] dialoguer::Error),
+
+    #[error("Validation error: {0}")]
+    ValidationError(String),
+
+    #[error("User cancelled operation")]
+    Cancelled,
+
     #[error("Other error: {0}")]
     Other(String),
 }

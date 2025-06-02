@@ -13,7 +13,8 @@ CREATE TABLE doctors (
 CREATE TABLE patients (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
-    date_of_birth DATE NOT NULL
+    date_of_birth DATE NOT NULL,
+    patient_number VARCHAR(50) UNIQUE
 );
 
 CREATE TABLE prescriptions (

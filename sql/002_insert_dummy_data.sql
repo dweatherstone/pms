@@ -1,8 +1,8 @@
 INSERT INTO doctors (name, license_number)
 VALUES ('Dr. Alice Smith', 'A12345');
 
-INSERT INTO patients (name, date_of_birth)
-VALUES ('John Doe', '1980-01-01');
+INSERT INTO patients (name, date_of_birth, patient_number)
+VALUES ('John Doe', '1980-01-01', 'B98765');
 
 INSERT INTO prescriptions (
     patient_id, doctor_id, medication_name, dosage,
