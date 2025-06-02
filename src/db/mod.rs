@@ -1,13 +1,15 @@
 pub mod doctor;
 pub mod patient;
+pub mod prescription;
 
 use std::{env, fs};
 
 use sqlx::{MySqlPool, mysql::MySqlPoolOptions};
 
-use crate::cli::{AddDoctorArgs, AddPatientArgs};
+use crate::cli::{AddDoctorArgs, AddPatientArgs, ListPrescriptionArgs};
 use crate::domain::doctor::Doctor;
 use crate::domain::patient::Patient;
+use crate::domain::prescription::PrescriptionDisplay;
 use crate::errors::AppError;
 
 pub async fn get_db_pool() -> Result<MySqlPool, AppError> {
@@ -58,6 +60,14 @@ pub async fn list_patients(
 
 pub async fn add_patient(args: &AddPatientArgs, pool: &MySqlPool) -> Result<(), AppError> {
     patient::add_patient(args, pool).await
+}
+
+pub async fn list_prescriptions(
+    args: &ListPrescriptionArgs,
+    pool: &MySqlPool,
+) -> Result<Vec<PrescriptionDisplay>, sqlx::Error> {
+    let args = args.sanitised();
+    prescription::list_prescriptions(&args, pool).await
 }
 
 async fn split_and_run_script(script: &str, pool: &MySqlPool) -> Result<(), sqlx::Error> {

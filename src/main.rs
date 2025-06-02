@@ -18,8 +18,12 @@ async fn main() -> Result<(), AppError> {
         }
         Commands::ListDoctors(args) => {
             let doctors = db::list_doctors(&pool, &args.name, &args.license_number).await?;
-            for doctor in doctors {
-                println!("{}", doctor);
+            if doctors.is_empty() {
+                println!("No doctors found.");
+            } else {
+                for doctor in doctors {
+                    println!("{}", doctor);
+                }
             }
         }
         Commands::AddDoctor(args) => {
@@ -27,12 +31,26 @@ async fn main() -> Result<(), AppError> {
         }
         Commands::ListPatients(args) => {
             let patients = db::list_patients(&pool, &args.name, &args.patient_number).await?;
-            for patient in patients {
-                println!("{}", patient);
+            if patients.is_empty() {
+                println!("No patients found.");
+            } else {
+                for patient in patients {
+                    println!("{}", patient);
+                }
             }
         }
         Commands::AddPatient(args) => {
             db::add_patient(args, &pool).await?;
+        }
+        Commands::ListPrescriptions(args) => {
+            let prescriptions = db::list_prescriptions(args, &pool).await?;
+            if prescriptions.is_empty() {
+                println!("No prescriptions found.");
+            } else {
+                for presciption in prescriptions {
+                    println!("{}", presciption);
+                }
+            }
         }
     }
 

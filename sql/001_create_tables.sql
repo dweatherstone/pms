@@ -27,7 +27,7 @@ CREATE TABLE prescriptions (
     refills_remaining INT NOT NULL DEFAULT 0,
     max_tablets_per_30_days INT NOT NULL DEFAULT 30,
     issued_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    valid_until DATE NOT NULL,
+    valid_until DATE,
     FOREIGN KEY (patient_id) REFERENCES patients(id) ON DELETE CASCADE,
     FOREIGN KEY (doctor_id) REFERENCES doctors(id) ON DELETE CASCADE
 );

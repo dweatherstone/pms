@@ -15,6 +15,7 @@ pub enum Commands {
     AddDoctor(AddDoctorArgs),
     ListPatients(PatientArgs),
     AddPatient(AddPatientArgs),
+    ListPrescriptions(ListPrescriptionArgs),
 }
 
 #[derive(Debug, Args)]
@@ -54,4 +55,34 @@ pub struct AddPatientArgs {
 
     #[arg(long)]
     pub patient_number: Option<String>,
+}
+
+#[derive(Debug, Args)]
+pub struct ListPrescriptionArgs {
+    #[arg(long)]
+    pub patient_name: Option<String>,
+
+    #[arg(long)]
+    pub patient_number: Option<String>,
+
+    #[arg(long)]
+    pub doctor_name: Option<String>,
+
+    #[arg(long)]
+    pub doctor_id: Option<i32>,
+
+    #[arg(long)]
+    pub include_expired: Option<bool>,
+}
+
+impl ListPrescriptionArgs {
+    pub fn sanitised(&self) -> Self {
+        Self {
+            patient_name: self.patient_name.as_ref().map(|s| s.trim().to_owned()),
+            patient_number: self.patient_number.as_ref().map(|s| s.trim().to_owned()),
+            doctor_name: self.doctor_name.as_ref().map(|s| s.trim().to_owned()),
+            doctor_id: self.doctor_id,
+            include_expired: self.include_expired,
+        }
+    }
 }
